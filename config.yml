@@ -3,7 +3,9 @@ word_embeddings:
   # Just set the default to empty string to disable the word embeddings
   default: word2vec
   word2vec:
-    path: ../../data/input/word_embeddings/GoogleNews-vectors-negative300.bin
+    #path: ../../data/input/word_embeddings/GoogleNews-vectors-negative300.bin
+    #path: /data/ourdata/yash_work/english_cleaned/eng_comments_min5_dot_consec_word2vec.bin
+    path: /data/ourdata/yash_work/hindi_word2vec/pure_hindi/pure_hindi_min5_word2vec.bin
     dimension: 300
     binary: True
   glove:
@@ -13,13 +15,18 @@ word_embeddings:
 
 datasets:
   # Support currently 3 datasets: mrpolarity, 20newsgroup and localdata
-  default: 20newsgroup
+  default: mrpolarity
   mrpolarity:
-    positive_data_file:
-      path: "data/rt-polaritydata/rt-polarity.pos"
+    positive_data_file: 
+      #path: "data/rt-polaritydata/rt-polarity.pos"
+      #path: "data/rt-polaritydata/rt-polarity-hindi_uniq_shuf.pos"
+      #path: "data/rt-polaritydata/rt-polarity-hindi_uniq_trim_doubt_not_kept_remApproxDup_oriTrimKept_addedHamsWithOffensiveWordAttached_shuf.pos"
+      path: "data/rt-polaritydata/rt-polarity-hindi_uniq_trim_doubt_not_kept_remApproxDup_oriTrimKept_shuf.pos"      
       info: "Data source for the positive data"
     negative_data_file:
-      path: "data/rt-polaritydata/rt-polarity.neg"
+      #path: "data/rt-polaritydata/rt-polarity.neg"
+      #path: "data/rt-polaritydata/rt-polarity-hindi_uniq_shuf.neg"
+      path: "data/rt-polaritydata/rt-polarity-hindi_uniq_off_words_new_added_shuf.neg"
       info: "Data source for the negative data"
   20newsgroup:
     # The dataset includes following 20 newsgroups:

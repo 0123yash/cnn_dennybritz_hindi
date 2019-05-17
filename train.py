@@ -7,6 +7,7 @@ import time
 import datetime
 import data_helpers
 from text_cnn import TextCNN
+#from text_cnn_weighed_loss import TextCNN
 from tensorflow.contrib import learn
 import yaml
 import math
@@ -23,7 +24,7 @@ tf.flags.DEFINE_integer("embedding_dim", 128, "Dimensionality of character embed
 tf.flags.DEFINE_string("filter_sizes", "3,4,5", "Comma-separated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (default: 0.5)")
-tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularization lambda (default: 0.0)")
+tf.flags.DEFINE_float("l2_reg_lambda", 1.0, "L2 regularization lambda (default: 0.0)")
 
 # Training parameters
 tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
@@ -37,11 +38,14 @@ tf.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on 
 tf.flags.DEFINE_float("decay_coefficient", 2.5, "Decay coefficient (default: 2.5)")
 
 FLAGS = tf.flags.FLAGS
-FLAGS._parse_flags()
-print("\nParameters:")
-for attr, value in sorted(FLAGS.__flags.items()):
-    print("{}={}".format(attr.upper(), value))
-print("")
+#FLAGS._parse_flags()
+#print("\nParameters:")
+#for attr, value in sorted(FLAGS.__flags.items()):
+#    print("{}={}".format(attr.upper(), value))
+#print("")
+
+def my_tokenizer_func(iterator):
+    return (x.split(" ") for x in iterator)
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
@@ -76,7 +80,7 @@ x_text, y = data_helpers.load_data_labels(datasets)
 
 # Build vocabulary
 max_document_length = max([len(x.split(" ")) for x in x_text])
-vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
+vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length, tokenizer_fn = my_tokenizer_func)
 x = np.array(list(vocab_processor.fit_transform(x_text)))
 
 # Randomly shuffle data
@@ -235,3 +239,5 @@ with tf.Graph().as_default():
             if current_step % FLAGS.checkpoint_every == 0:
                 path = saver.save(sess, checkpoint_prefix, global_step=current_step)
                 print("Saved model checkpoint to {}\n".format(path))
+            if current_step == 20000:
+                break
