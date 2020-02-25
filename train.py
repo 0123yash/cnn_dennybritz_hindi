@@ -11,6 +11,7 @@ from text_cnn import TextCNN
 from tensorflow.contrib import learn
 import yaml
 import math
+from data_helpers import my_tokenizer_func
 
 # Parameters
 # ==================================================
@@ -44,8 +45,8 @@ FLAGS = tf.flags.FLAGS
 #    print("{}={}".format(attr.upper(), value))
 #print("")
 
-def my_tokenizer_func(iterator):
-    return (x.split(" ") for x in iterator)
+#def my_tokenizer_func(iterator):
+#    return (x.split(" ") for x in iterator)
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)

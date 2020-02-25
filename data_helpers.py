@@ -36,6 +36,17 @@ def clean_str_pure_hindi(string):
     return string.strip()
 
 
+def filter_kannada(text):
+    """
+    filters for only kannada language
+    clean_str for vijaykarnataka channel
+    """
+    #re.search returns None if not found
+    mod_text = re.sub(r"[^\u0C80-\u0CFF]", " ", text)
+    mod_text = re.sub(r"\s{2,}", " ", mod_text)
+    return mod_text.strip()
+
+
 def batch_iter(data, batch_size, num_epochs, shuffle=True):
     """
     Generates a batch iterator for a dataset.
@@ -116,6 +127,7 @@ def load_data_labels(datasets):
     
     #x_text = [clean_str(sent) for sent in x_text]
     x_text = [clean_str_pure_hindi(sent) for sent in x_text]
+    #x_text = [filter_kannada(sent) for sent in x_text]
 
     # Generate labels
     labels = []
@@ -183,3 +195,7 @@ def load_embedding_vectors_glove(vocabulary, filename, vector_size):
             embedding_vectors[idx] = vector
     f.close()
     return embedding_vectors
+
+
+def my_tokenizer_func(iterator):
+    return (x.split(" ") for x in iterator)
